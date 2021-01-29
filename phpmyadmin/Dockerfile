@@ -3,7 +3,9 @@ FROM alpine:3.12
 ENV REQUIRED_PACKAGES \
   nginx \
   php7 \
+  openrc \
   php7-bz2 \
+  php7-fpm \
   php7-ctype \
   php7-gd \
   php7-json \
@@ -15,22 +17,24 @@ ENV REQUIRED_PACKAGES \
   php7-zip \
   php7-zlib
 
-RUN apk update && apk upgrade
-RUN apk add -U --no-cache $REQUIRED_PACKAGES
+RUN apk update && apk upgrade && apk add -U --no-cache $REQUIRED_PACKAGES
+
+RUN mkdir -p /run/nginx
+RUN mkdir ./www
 
 RUN wget https://files.phpmyadmin.net/phpMyAdmin/5.0.4/phpMyAdmin-5.0.4-all-languages.tar.gz
 RUN tar xvf phpMyAdmin-5.0.4-all-languages.tar.gz
-RUN mv phpMyAdmin-5.0.4-all-languages/ /www
+RUN mv phpMyAdmin-5.0.4-all-languages ./www/phpmyadmin
 RUN rm -rf phpMyAdmin-5.0.4-all-languages.tar.gz
 
-ADD index.html /www/index.html
-RUN chmod 666 /www/index.html
+COPY nginx.conf /etc/nginx/conf.d/nginx.conf
+RUN rm /etc/nginx/conf.d/default.conf
 
+ADD index.html /www/phpmyadmin/index.html
 COPY ./setup.sh .
 RUN chmod +x setup.sh
+COPY config.inc.php /www/phpmyadmin/config.inc.php
 
-COPY config.inc.php /www/config.inc.php
-
-EXPOSE 5000 80 443
+EXPOSE 5000
 
 CMD ./setup.sh

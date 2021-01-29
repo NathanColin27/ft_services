@@ -1,5 +1,5 @@
-docker rmi -f ft_server_image;
-docker rm -f ft_server;
-docker build . -t ft_server_image;
-docker run -tid -p 5000 --name ft_server ft_server_image;
-docker exec -ti ft_server ash
+docker rmi -f ft_phpmyadmin_image;
+docker rm -f ft_phpmyadmin;
+docker build . -t ft_phpmyadmin_image;
+docker run -tid -p 5000:5000 --name ft_phpmyadmin ft_phpmyadmin_image;
+docker exec -ti ft_phpmyadmin ash

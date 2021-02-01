@@ -1,41 +1,41 @@
+##############
+# DEPLOYMENT #
+##############
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mysql-deployment
   labels:
-    app: mysql-app
+    app: mysql
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: mysql-app
-      tier: mysql
-  strategy:
-    type: Recreate
+      app: mysql
   template:
     metadata:
       labels:
-        app: mysql-app
-        tier: mysql
+        app: mysql
     spec:
       containers:
       - name: mysql
-        image: ft_mysql
+        image: ft_mysql_image
         imagePullPolicy: Never
-      ports:
-      - containerPort: 3306
-        name: mysql
+        ports:
+        - containerPort: 3306
+          name: mysql
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: mysql-service
   labels:
-    app: mysql-app
+    app: mysql
 spec:
   type: ClusterIP
   ports:
     - port: 3306
   selector:
-    app: mysql-app
+    app: mysql
     tier: mysql

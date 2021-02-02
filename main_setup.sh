@@ -27,5 +27,8 @@ kubectl apply -f yaml/mysql-deployment.yaml
 kubectl apply -f yaml/nginx-deployment.yaml
 kubectl apply -f yaml/phpmyadmin-deployment.yaml
 kubectl apply -f yaml/ftps-deployment.yaml
+kubectl apply -f yaml/grafana-deployment.yaml
+
+
 
 minikube dashboard

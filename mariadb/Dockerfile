@@ -5,6 +5,8 @@ ENV REQUIRED_PACKAGES \
 	mariadb-client
 
 RUN apk update && apk upgrade && apk add -U --no-cache $REQUIRED_PACKAGES
+RUN mkdir -p /run/mysqld && touch /run/mysqld/mysqld.sock
+RUN mkdir -p /var/lib/mysql
 
 COPY start.sql .
 COPY ./setup.sh .

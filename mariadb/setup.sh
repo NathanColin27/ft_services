@@ -1,14 +1,12 @@
 #!/bin/ash
 
-if [ ! -d "/run/mysqld" ]; then
-	mkdir -p /run/mysqld
-	chown -R mysql:mysql /run/mysqld
-fi
+mysql_install_db --user=root --ldata=/var/lib/mysql
+cat > /tmp/sql << eof
+CREATE DATABASE wordpress;
+FLUSH PRIVILEGES;
+CREATE USER 'root'@'%' IDENTIFIED BY 'root';
+GRANT ALL PRIVILEGES ON wordpress.* TO 'root'@'%' IDENTIFIED BY 'root' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
+eof
 
-chown -R mysql:mysql /var/lib/mysql
-
-mysql_install_db
-
-/usr/bin/mysqld --user=mysql --bootstrap --verbose=0 < config.sql
-
-/usr/bin/mysqld --user=root --skip-networking=0 --port=3306 --datadir=/var/lib/mysql --bind-address=0.0.0.0
+mysqld --user=root --console --init_file=/tmp/sql --port=3306 --datadir=/var/lib/mysql

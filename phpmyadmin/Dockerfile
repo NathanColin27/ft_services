@@ -33,6 +33,7 @@ RUN rm /etc/nginx/conf.d/default.conf
 ADD index.html /www/phpmyadmin/index.html
 COPY ./setup.sh .
 RUN chmod +x setup.sh
+RUN rm /www/phpmyadmin/config.sample.inc.php
 COPY config.inc.php /www/phpmyadmin/config.inc.php
 
 EXPOSE 5000

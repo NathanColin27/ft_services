@@ -6,11 +6,12 @@ ENV REQUIRED_PACKAGES \
 
 RUN apk update && apk upgrade && apk add -U --no-cache $REQUIRED_PACKAGES
 
+COPY start.sql .
 COPY ./setup.sh .
-ADD my.cnf /etc/
+# ADD my.cnf /etc/
 RUN chmod +x ./setup.sh
 
 EXPOSE 3306
 
-CMD ash ./setup.sh
+CMD sh setup.sh
 

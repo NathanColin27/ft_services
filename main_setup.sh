@@ -2,7 +2,7 @@
 
 echo "if a previous cluster is still present, deletes it"
 
-minikube delete --all
+# minikube delete --all
 
 minikube start --vm-driver=virtualbox
 
@@ -19,15 +19,15 @@ kubectl create secret generic -n metallb-system memberlist --from-literal=secret
 ./nginx/go.sh
 ./phpmyadmin/go.sh
 ./mariadb/go.sh
-./grafana/go.sh
-./ftps/go.sh
+# ./grafana/go.sh
+# ./ftps/go.sh
 
 kubectl apply -f yaml/metallb-configmap.yaml
 kubectl apply -f yaml/mysql-deployment.yaml
 kubectl apply -f yaml/nginx-deployment.yaml
 kubectl apply -f yaml/phpmyadmin-deployment.yaml
-kubectl apply -f yaml/ftps-deployment.yaml
-kubectl apply -f yaml/grafana-deployment.yaml
+# kubectl apply -f yaml/ftps-deployment.yaml
+# kubectl apply -f yaml/grafana-deployment.yaml
 
 
 

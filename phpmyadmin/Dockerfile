@@ -1,6 +1,7 @@
 FROM alpine:3.12
 
 ENV REQUIRED_PACKAGES \
+  openrc \
   nginx \
   php7 \
   openrc \

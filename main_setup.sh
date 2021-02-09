@@ -22,9 +22,9 @@ minikube dashboard &
 ./nginx/go.sh
 ./phpmyadmin/go.sh
 ./mysql/go.sh
-./grafana/go.sh
-./ftps/go.sh
-./influxdb/go.sh
+# ./grafana/go.sh
+# ./ftps/go.sh
+# ./influxdb/go.sh
 ./wordpress/go.sh
 
 
@@ -32,9 +32,9 @@ kubectl apply -f yaml/metallb-configmap.yaml
 kubectl apply -f yaml/mysql-deployment.yaml
 kubectl apply -f yaml/nginx-deployment.yaml
 kubectl apply -f yaml/phpmyadmin-deployment.yaml
-kubectl apply -f yaml/ftps-deployment.yaml
-kubectl apply -f yaml/grafana-deployment.yaml
-kubectl apply -f yaml/influxdb-deployment.yaml
+# kubectl apply -f yaml/ftps-deployment.yaml
+# kubectl apply -f yaml/grafana-deployment.yaml
+# kubectl apply -f yaml/influxdb-deployment.yaml
 kubectl apply -f yaml/wordpress-deployment.yaml
 
 sleep 10

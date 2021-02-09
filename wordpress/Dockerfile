@@ -11,12 +11,9 @@ RUN mkdir /www
 COPY ./nginx_wp.conf /etc/nginx/conf.d/nginx_wp.conf
 RUN rm /etc/nginx/conf.d/default.conf
 
-COPY ./wordpress.tar.gz /www
-RUN tar -xvf /www/wordpress.tar.gz -C /www
-RUN rm /www/wordpress.tar.gz
+COPY ./wordpress /www
 
 RUN mkdir -p /run/nginx
-COPY wp-config.php www/wordpress/
 
 EXPOSE 5050
 

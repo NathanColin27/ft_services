@@ -19,6 +19,7 @@ ENV REQUIRED_PACKAGES \
   php7-zlib
 
 RUN apk update && apk upgrade && apk add -U --no-cache $REQUIRED_PACKAGES
+RUN apk add telegraf --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community --allow-untrusted --no-cache
 
 RUN mkdir -p /run/nginx
 

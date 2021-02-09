@@ -24,7 +24,6 @@ spec:
         imagePullPolicy: Never
         ports:
         - containerPort: 5000
-          name: http
 ---
 ###########
 # SERVICE #
@@ -44,6 +43,5 @@ spec:
   selector:
     app: phpmyadmin
   ports:
-  - name: http
-    port: 5000
-    protocol: TCP
+  - port: 5000
+    name: http

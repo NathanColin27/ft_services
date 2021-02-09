@@ -13,7 +13,8 @@ RUN apk add telegraf --repository=http://dl-cdn.alpinelinux.org/alpine/edge/comm
 RUN mkdir -p /run/mysqld && touch /run/mysqld/mysqld.sock
 
 RUN mkdir -p /setup
-ADD start.sql ./setup
+
+ADD ./start.sql /setup/
 ADD ./mysql_setup.sh ./setup
 
 RUN mkdir -p /etc/telegraf

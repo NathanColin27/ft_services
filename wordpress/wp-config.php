@@ -22,13 +22,13 @@
 define( 'DB_NAME', 'wordpress' );
 
 /** Utilisateur de la base de données MySQL. */
-define( 'DB_USER', 'root' );
+define( 'DB_USER', 'wp_user' );
 
 /** Mot de passe de la base de données MySQL. */
-define( 'DB_PASSWORD', 'root' );
+define( 'DB_PASSWORD', 'wp_pass' );
 
 /** Adresse de l’hébergement MySQL. */
-define( 'DB_HOST', 'mysql' );
+define( 'DB_HOST', 'mysql:3306' );
 
 /** Jeu de caractères à utiliser par la base de données lors de la création des tables. */
 define( 'DB_CHARSET', 'utf8mb4' );

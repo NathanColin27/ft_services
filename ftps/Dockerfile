@@ -6,13 +6,18 @@ FROM alpine:3.12
 RUN apk update && apk upgrade
 RUN apk add openssl
 RUN apk add pure-ftpd --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ --allow-untrusted --no-cache
-
+RUN apk add telegraf --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community --allow-untrusted --no-cache
 
 RUN mkdir -p /etc/ssl/private
 RUN openssl req -newkey rsa:2048 -nodes -keyout /etc/ssl/private/pure-ftpd.pem -x509 -days 365 -out /etc/ssl/private/pure-ftpd.pem -subj '/CN=localhost'
 
 RUN adduser -D ncolin
 RUN echo "ncolin:ncolin" | chpasswd
+
+RUN mkdir -p /etc/telegraf
+
+COPY ./telegraf.conf /etc/telegraf/telegraf.conf
+
 EXPOSE 21 30000-30004
 COPY setup.sh /setup.sh
 CMD /setup.sh

@@ -16,14 +16,16 @@ ENV REQUIRED_PACKAGES \
   php7-zlib
 
 RUN apk update && apk upgrade && apk add -U --no-cache $REQUIRED_PACKAGES
+RUN apk add telegraf --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community --allow-untrusted --no-cache
+
 RUN mkdir /www
-
-
 COPY ./setup.sh /setup.sh
 COPY ./wordpress.tar.gz /www
 RUN tar -xvf /www/wordpress.tar.gz -C /www
 RUN rm /www/wordpress.tar.gz
 COPY wp-config.php www/wp-config.php
 EXPOSE 5050
+RUN mkdir -p /etc/telegraf
+COPY ./telegraf.conf /etc/telegraf/telegraf.conf
 
 CMD sh setup.sh

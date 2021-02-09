@@ -21,13 +21,20 @@ kubectl create secret generic -n metallb-system memberlist --from-literal=secret
 
 ./nginx/go.sh
 ./phpmyadmin/go.sh
-./mariadb/go.sh
-# ./grafana/go.sh
-# ./ftps/go.sh
+./mysql/go.sh
+./grafana/go.sh
+./ftps/go.sh
+./influxdb/go.sh
+./wordpress/go.sh
+
 
 kubectl apply -f yaml/metallb-configmap.yaml
 kubectl apply -f yaml/mysql-deployment.yaml
 kubectl apply -f yaml/nginx-deployment.yaml
 kubectl apply -f yaml/phpmyadmin-deployment.yaml
-# kubectl apply -f yaml/ftps-deployment.yaml
-# kubectl apply -f yaml/grafana-deployment.yaml
+kubectl apply -f yaml/ftps-deployment.yaml
+kubectl apply -f yaml/grafana-deployment.yaml
+kubectl apply -f yaml/influxdb-deployment.yaml
+kubectl apply -f yaml/wordpress-deployment.yaml
+
+kubectl exec -i `kubectl get pods | grep -o "\S*mysql\S*"` -- mysql wordpress -u root < mysql/wordpress.sql

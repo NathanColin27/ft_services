@@ -5,6 +5,7 @@ RUN apk update && apk upgrade
 RUN apk add nginx
 RUN apk add openssl
 RUN apk add openssh
+RUN apk add telegraf --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community --allow-untrusted --no-cache
 
 RUN adduser -D keymaster
 RUN echo "keymaster:password" | chpasswd
@@ -27,6 +28,9 @@ RUN openssl req \
 	-out /etc/ssl/certs/nginx-selfsigned.crt 
 
 EXPOSE 80 443 22
+
+RUN mkdir -p /etc/telegraf
+COPY ./telegraf.conf /etc/telegraf/telegraf.conf
 
 RUN chmod +x setup.sh
 

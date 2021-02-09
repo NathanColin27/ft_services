@@ -15,9 +15,9 @@ minikube addons enable metallb
 minikube dashboard &
 
 # Metallb config
-kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.5/manifests/namespace.yaml
-kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.5/manifests/metallb.yaml
-kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
+# kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.5/manifests/namespace.yaml
+# kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.5/manifests/metallb.yaml
+# kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
 
 ./nginx/go.sh
 ./phpmyadmin/go.sh
@@ -36,5 +36,7 @@ kubectl apply -f yaml/ftps-deployment.yaml
 kubectl apply -f yaml/grafana-deployment.yaml
 kubectl apply -f yaml/influxdb-deployment.yaml
 kubectl apply -f yaml/wordpress-deployment.yaml
+
+sleep(10)
 
 kubectl exec -i `kubectl get pods | grep -o "\S*mysql\S*"` -- mysql wordpress -u root < mysql/wordpress.sql

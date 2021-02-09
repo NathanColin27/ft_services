@@ -21,20 +21,15 @@ ENV REQUIRED_PACKAGES \
 RUN apk update && apk upgrade && apk add -U --no-cache $REQUIRED_PACKAGES
 
 RUN mkdir -p /run/nginx
-RUN mkdir ./www
 
-RUN wget https://files.phpmyadmin.net/phpMyAdmin/5.0.4/phpMyAdmin-5.0.4-all-languages.tar.gz
-RUN tar xvf phpMyAdmin-5.0.4-all-languages.tar.gz
-RUN mv phpMyAdmin-5.0.4-all-languages ./www/phpmyadmin
-RUN rm -rf phpMyAdmin-5.0.4-all-languages.tar.gz
+RUN mkdir -p /www/phpmyadmin
+COPY phpmyadmin /www/phpmyadmin
 
 COPY nginx.conf /etc/nginx/conf.d/nginx.conf
 RUN rm /etc/nginx/conf.d/default.conf
 
 COPY ./setup.sh /
 RUN chmod +x setup.sh
-RUN rm /www/phpmyadmin/config.sample.inc.php
-COPY config.inc.php /www/phpmyadmin/config.inc.php
 RUN mkdir -p /etc/telegraf
 COPY ./telegraf.conf /etc/telegraf/telegraf.conf
 EXPOSE 5000

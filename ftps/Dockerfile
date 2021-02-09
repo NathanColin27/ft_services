@@ -1,4 +1,3 @@
-# Container OS
 FROM alpine:3.12
 # FTPS = FTP + SSL
 # SFTP = FTP + SSH

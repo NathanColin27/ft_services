@@ -1,7 +1,3 @@
-###########
-# SERVICE #
-###########
-
 apiVersion: v1
 kind: Service
 metadata:
@@ -9,18 +5,12 @@ metadata:
   labels:
     app: mysql
 spec:
-  type: ClusterIP
-  ports:
-    - port: 3306
   selector:
     app: mysql
-    tier: mysql
+  ports:
+    - port: 3306
+  type: ClusterIP
 ---
-
-#####################
-# PERSISTENT VOLUME #
-#####################
-
 apiVersion: v1
 kind: PersistentVolume
 metadata:
@@ -28,37 +18,26 @@ metadata:
 spec:
   storageClassName: manual
   capacity:
-    storage: 1Gi
-  accessModes:
-  - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain
-  hostPath:
-    path: "/var/lib/mysql"
-
----
-###########################
-# PERSISTENT VOLUME CLAIM #
-###########################
-
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: mysql-pv-claim
-  labels:
-    app: mysql
-spec:
+    storage: 500Mi
   accessModes:
     - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: "/data/mysql"
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: mysql-pvc
+spec:
   storageClassName: manual
   volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
   resources:
     requests:
-      storage: 1Gi
+      storage: 500Mi
 ---
-##############
-# DEPLOYMENT #
-##############
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -66,7 +45,6 @@ metadata:
   labels:
     app: mysql
 spec:
-  replicas: 1
   selector:
     matchLabels:
       app: mysql
@@ -76,16 +54,15 @@ spec:
         app: mysql
     spec:
       containers:
-      - name: mysql
-        image: ft_mysql_image
-        imagePullPolicy: Never
-        ports:
-        - containerPort: 3306
-          name: mysql
-        volumeMounts:
-        - name: mysql-pv
-          mountPath: "/var/lib/mysql"
+        - name: mysql
+          image: ft_mysql_image
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - mountPath: "/var/lib/mysql"
+              name: mysql-pv
       volumes:
-      - name: mysql-pv
-        persistentVolumeClaim:
-          claimName: mysql-pv-claim
+        - name: mysql-pv
+          persistentVolumeClaim:
+            claimName: mysql-pvc

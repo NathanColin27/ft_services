@@ -1,0 +1,62 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    influxdb-deployment.yaml                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: nathan <nathan@student.42.fr>              +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2021/02/10 09:19:43 by nathan            #+#    #+#              #
+#    Updated: 2021/02/10 12:55:20 by nathan           ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
+##############
+# DEPLOYMENT #
+##############
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: influxdb
+  labels:
+    app: influxdb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: influxdb
+  template:
+    metadata:
+      labels:
+        app: influxdb
+    spec:
+      containers:
+      - name: influxdb
+        image: ft_influxdb_image
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8086
+        livenessProbe:
+          tcpSocket:
+            port: 8086
+          initialDelaySeconds: 10
+          periodSeconds: 10
+---
+
+###########
+# SERVICE #
+###########
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: influxdb
+  labels:
+    app: influxdb
+spec:
+  type: ClusterIP
+  selector:
+    app: influxdb
+  ports:
+    - name: http
+      port: 8086

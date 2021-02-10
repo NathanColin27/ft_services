@@ -1,0 +1,64 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    phpmyadmin-deployment.yaml                         :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: nathan <nathan@student.42.fr>              +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2021/02/10 09:19:49 by nathan            #+#    #+#              #
+#    Updated: 2021/02/10 12:58:13 by nathan           ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
+##############
+# DEPLOYMENT #
+##############
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: phpmyadmin
+  labels:
+    app: phpmyadmin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: phpmyadmin
+  template:
+    metadata:
+      labels:
+        app: phpmyadmin
+    spec:
+      containers:
+      - name: phpmyadmin
+        image: ft_phpmyadmin_image
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 5000
+        livenessProbe:
+          tcpSocket:
+            port: 5000
+          initialDelaySeconds: 10
+          periodSeconds: 10
+---
+###########
+# SERVICE #
+###########
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: phpmyadmin
+  annotations:
+    metallb.universe.tf/allow-shared-ip: shared-ip
+  labels:
+    app: phpmyadmin
+spec:
+  type: LoadBalancer
+  loadBalancerIP: 192.168.99.19
+  selector:
+    app: phpmyadmin
+  ports:
+  - port: 5000
+    name: http

@@ -1,0 +1,62 @@
+##############
+# DEPLOYMENT #
+##############
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  labels:
+    app: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: ft_nginx_image
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 80
+          name: http
+        - containerPort: 443
+          name: https
+        - containerPort: 22
+          name: ssh
+        livenessProbe:
+          tcpSocket:
+            port: 22
+          initialDelaySeconds: 10
+          periodSeconds: 10
+---
+
+###########
+# SERVICE #
+###########
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+  annotations:
+    metallb.universe.tf/allow-shared-ip: shared-ip
+  labels:
+    app: nginx
+spec:
+  type: LoadBalancer
+  loadBalancerIP: 192.168.99.19
+  selector:
+    app: nginx
+  ports:
+    - name: http
+      port: 80
+    - name: https
+      port: 443
+    - name: ssh
+      port: 22

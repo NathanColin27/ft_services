@@ -1,0 +1,80 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    mysql-deployment.yaml                              :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: nathan <nathan@student.42.fr>              +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2021/02/10 09:19:33 by nathan            #+#    #+#              #
+#    Updated: 2021/02/10 13:03:16 by nathan           ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+  labels:
+    app: mysql
+spec:
+  selector:
+    app: mysql
+  ports:
+    - port: 3306
+  type: ClusterIP
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mysql-pv
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 500Mi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: "/data/mysql"
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: mysql-pvc
+spec:
+  storageClassName: manual
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 500Mi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+  labels:
+    app: mysql
+spec:
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+        - name: mysql
+          image: ft_mysql_image
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - mountPath: "/var/lib/mysql"
+              name: mysql-pv
+      volumes:
+        - name: mysql-pv
+          persistentVolumeClaim:
+            claimName: mysql-pvc

@@ -6,15 +6,15 @@ minikube start --vm-driver=virtualbox
 
 eval $(minikube docker-env)
 
+minikube dashboard &
+
 minikube addons enable metrics-server
 minikube addons enable dashboard
 minikube addons enable metallb
 
-minikube dashboard &
+./srcs/scripts/containers.sh
+./srcs/scripts/yaml.sh
 
-./scripts/containers.sh
-./scripts/yaml.sh
+sleep 10
 
-# sleep 10
-
-# kubectl exec -i `kubectl get pods | grep -o "\S*mysql\S*"` -- mysql wordpress -u root < mysql/wordpress.sql
+kubectl exec -i `kubectl get pods | grep -o "\S*mysql\S*"` -- mysql wordpress -u root < srcs/wordpress/wordpress.sql

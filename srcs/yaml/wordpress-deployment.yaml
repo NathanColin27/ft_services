@@ -1,0 +1,65 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    wordpress-deployment.yaml                          :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: nathan <nathan@student.42.fr>              +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2021/02/10 09:19:53 by nathan            #+#    #+#              #
+#    Updated: 2021/02/10 12:58:31 by nathan           ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
+##############
+# DEPLOYMENT #
+##############
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wordpress
+  labels:
+    app: wordpress
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wordpress
+  template:
+    metadata:
+      labels:
+        app: wordpress
+    spec:
+      containers:
+      - name: wordpress
+        image: ft_wordpress_image
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 5050
+        livenessProbe:
+          tcpSocket:
+            port: 5050
+          initialDelaySeconds: 10
+          periodSeconds: 10
+---
+
+###########
+# SERVICE #
+###########
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: wordpress
+  annotations:
+    metallb.universe.tf/allow-shared-ip: shared-ip
+  labels:
+    app: wordpress
+spec:
+  type: LoadBalancer
+  loadBalancerIP: 192.168.99.19
+  selector:
+    app: wordpress
+  ports:
+    - name: http
+      port: 5050

@@ -1,0 +1,66 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    grafana-deployment.yaml                            :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: nathan <nathan@student.42.fr>              +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2021/02/10 09:19:40 by nathan            #+#    #+#              #
+#    Updated: 2021/02/10 12:55:10 by nathan           ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
+##############
+# DEPLOYMENT #
+##############
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana
+  labels:
+    app: grafana
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grafana
+  template:
+    metadata:
+      labels:
+        app: grafana
+    spec:
+      containers:
+      - name: grafana
+        image: ft_grafana_image
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 3000
+          name: grafana
+        livenessProbe:
+          tcpSocket:
+            port: 3000
+          initialDelaySeconds: 10
+          periodSeconds: 10
+---
+
+###########
+# SERVICE #
+###########
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana
+  annotations:
+    metallb.universe.tf/allow-shared-ip: shared-ip
+  labels:
+    app: grafana
+spec:
+  type: LoadBalancer
+  loadBalancerIP: 192.168.99.19
+  selector:
+    app: grafana
+  ports:
+    - name: grafana
+      port: 3000
